@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文法マスターへの道～用言の活用編～</title>
+    <!-- Google Fonts: 読みやすく親しみやすいフォント -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --secondary: #f59e0b;
+            --secondary-dark: #d97706;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --bg-gradient-start: #f0f7ff;
+            --bg-gradient-end: #e0e7ff;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --border-color: #cbd5e1;
+            --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.06);
+            --shadow-md: 0 8px 20px rgba(15, 23, 42, 0.08);
+            --shadow-lg: 0 12px 28px rgba(15, 23, 42, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            line-height: 1.5;
+        }
+
+        /* 和柄風の背景装飾 */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(#93c5fd 1px, transparent 1px);
+            background-size: 24px 24px;
+            opacity: 0.35;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 680px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ヘッダー（スリム化） */
+        .app-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            color: white;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid #f59e0b;
+        }
+
+        .header-title {
+            font-family: 'Zen Maru Gothic', sans-serif;
+            font-size: 1rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.03em;
+        }
+
+        .hint-toggle-btn {
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff;
+            border: 1.5px solid rgba(255, 255, 255, 0.5);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .hint-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* 画面切り替え（余白をコンパクトに） */
+        .screen {
+            display: none;
+            padding: 16px 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==================== スタート画面 ==================== */
+        .start-hero {
+            text-align: center;
+            padding: 4px 0 12px;
+        }
+
+        .badge-pill {
+            display: inline-block;
+            background: #fef3c7;
+            color: #b45309;
+            font-weight: 700;
+            font-size: 0.8rem;
+            padding: 3px 14px;
+            border-radius: 999px;
+            border: 1.5px solid #fcd34d;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            font-family: 'Zen Maru Gothic', sans-serif;
+            font-size: clamp(1.55rem, 4.5vw, 2.1rem);
+            font-weight: 900;
+            color: #1e3a8a;
+            line-height: 1.25;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 0 #dbeafe;
+        }
+
+        .sub-title {
+            font-family: 'Zen Maru Gothic', sans-serif;
+            font-size: clamp(1rem, 3vw, 1.25rem);
+            font-weight: 700;
+            color: #d97706;
+            margin-bottom: 12px;
+        }
+
+        .hero-emblem {
+            width: 82px;
+            height: 82px;
+            margin: 0 auto 12px;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #93c5fd;
+            box-shadow: 0 6px 12px rgba(37, 99, 235, 0.15);
+        }
+
+        .rule-card {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .rule-card h3 {
+            font-size: 0.9rem;
+            color: #1e3a8a;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .rule-list {
+            list-style: none;
+            font-size: 0.85rem;
+            color: #475569;
+            display: grid;
+            gap: 5px;
+        }
+
+        .rule-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        .rule-list li span.dot {
+            color: #2563eb;
+            font-weight: 900;
+        }
+
+        /* 汎用ボタン（高さスリム化） */
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            border-bottom: 3px solid #1e3a8a;
+            border-radius: 12px;
+            padding: 12px 18px;
+            font-family: 'Zen Maru Gothic', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 4px 10px rgba(29, 78, 216, 0.22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+        }
+
+        .btn-primary:active {
+            transform: translateY(2px);
+            border-bottom-width: 1px;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+            border-bottom: 3px solid #92400e;
+            box-shadow: 0 4px 10px rgba(217, 119, 6, 0.22);
+            padding: 10px 16px;
+            font-size: 1rem;
+        }
+
+        /* ==================== クイズ画面（コンパクト調整） ==================== */
+        .quiz-status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .q-counter {
+            font-family: 'Zen Maru Gothic', sans-serif;
+            font-size: 0.95rem;
+            color: #1e3a8a;
+            background: #eff6ff;
+            padding: 2px 12px;
+            border-radius: 999px;
+            border: 1.5px solid #bfdbfe;
+        }
+
+        .score-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .score-badge {
+            background: #fef3c7;
+            color: #b45309;
+            padding: 2px 10px;
+            border-radius: 999px;
+            border: 1.5px solid #fde68a;
+        }
+
+        .combo-badge {
+            background: #dcfce7;
+            color: #15803d;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            transition: transform 0.2s ease;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 7px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #10b981);
+            width: 10%;
+            border-radius: 999px;
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* 問題エリア（余白と文字サイズをコンパクトに） */
+        .question-box {
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 2px solid #cbd5e1;
+            border-radius: 14px;
+            padding: 14px 14px;
+            text-align: center;
+            margin-bottom: 12px;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.8);
+        }
+
+        .question-prompt {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            margin-bottom: 6px;
+        }
+
+        .sentence-display {
+            font-size: clamp(1.15rem, 3.6vw, 1.48rem);
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: 0.03em;
+            line-height: 1.45;
+        }
+
+        .target-word {
+            display: inline-block;
+            background: #fef08a;
+            color: #b91c1c;
+            border-bottom: 2.5px solid #ef4444;
+            padding: 0 5px;
+            margin: 0 2px;
+            border-radius: 5px;
+            font-weight: 900;
+            box-shadow: 0 1px 4px rgba(239, 68, 68, 0.15);
+        }
+
+        /* 6択グリッド（常に3列×2段で縦幅を節約） */
+        .choices-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .choice-btn {
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            border-bottom: 3px solid #94a3b8;
+            border-radius: 10px;
+            padding: 10px 6px;
+            font-family: 'Zen Maru Gothic', sans-serif;
+            font-size: clamp(0.92rem, 2.8vw, 1.05rem);
+            font-weight: 900;
+            color: #1e293b;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .choice-btn:hover:not(:disabled) {
+            background: #eff6ff;
+            border-color: #3b82f6;
+            border-bottom-color: #1d4ed8;
+            color: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .choice-btn:active:not(:disabled) {
+            transform: translateY(1px);
+            border-bottom-width: 1.5px;
+        }
+
+        .choice-btn:disabled {
+            cursor: default;
+            opacity: 0.72;
+        }
+
+        /* 正解・不正解時のボタンスタイル */
+        .choice-btn.correct {
+            background: #dcfce7 !important;
+            border-color: #16a34a !important;
+            border-bottom-color: #15803d !important;
+            color: #14532d !important;
+            opacity: 1 !important;
+            transform: scale(1.02);
+            box-shadow: 0 3px 8px rgba(22, 163, 74, 0.22);
+        }
+
+        .choice-btn.wrong {
+            background: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            border-bottom-color: #b91c1c !important;
+            color: #7f1d1d !important;
+            opacity: 1 !important;
+        }
+
+        /* 解説パネル（コンパクト化） */
+        .feedback-panel {
+            display: none;
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-top: 10px;
+            animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .feedback-panel.show {
+            display: block;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .feedback-panel.is-correct {
+            background: #f0fdf4;
+            border: 1.5px solid #86efac;
+        }
+
+        .feedback-panel.is-wrong {
+            background: #fef2f2;
+            border: 1.5px solid #fca5a5;
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Zen Maru Gothic', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+
+        .is-correct .feedback-header {
+            color: #15803d;
+        }
+
+        .is-wrong .feedback-header {
+            color: #b91c1c;
+        }
+
+        .grammar-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 6px;
+        }
+
+        .meta-pill {
+            font-size: 0.74rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #334155;
+        }
+
+        .explanation-text {
+            font-size: 0.86rem;
+            color: #1e293b;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        /* ==================== リザルト画面 ==================== */
+        .result-header {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .rank-card {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 2.5px solid #f59e0b;
+            border-radius: 16px;
+            padding: 16px 16px;
+            text-align: center;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 18px rgba(245, 158, 11, 0.16);
+            position: relative;
+        }
+
+        .rank-card.rank-king {
+            background: linear-gradient(135deg, #fef9c3 0%, #fde047 50%, #fef08a 100%);
+            border-color: #eab308;
+        }
+
+        .rank-card.rank-master {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-color: #3b82f6;
+        }
+
+        .rank-card.rank-expert {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-color: #10b981;
+        }
+
+        .rank-card.rank-apprentice {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-color: #64748b;
+        }
+
+        .rank-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #78350f;
+            letter-spacing: 0.08em;
+            margin-bottom: 4px;
+        }
+
+        .rank-title {
+            font-family: 'Zen Maru Gothic', sans-serif;
+            font-size: clamp(1.5rem, 5vw, 2.1rem);
+            font-weight: 900;
+            color: #b45309;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 0 rgba(255,255,255,0.8);
+        }
+
+        .rank-king .rank-title { color: #a16207; }
+        .rank-master .rank-title { color: #1d4ed8; }
+        .rank-expert .rank-title { color: #047857; }
+        .rank-apprentice .rank-title { color: #334155; }
+
+        .score-big {
+            font-family: 'Zen Maru Gothic', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #1e293b;
+            margin-bottom: 6px;
+        }
+
+        .score-big span {
+            font-size: 1.9rem;
+            color: #ef4444;
+        }
+
+        .rank-comment {
+            font-size: 0.86rem;
+            color: #334155;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* 振り返りリスト */
+        .review-section {
+            margin-bottom: 16px;
+        }
+
+        .review-section h3 {
+            font-family: 'Zen Maru Gothic', sans-serif;
+            font-size: 0.98rem;
+            color: #1e3a8a;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .review-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .review-item {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 0.84rem;
+        }
+
+        .review-item.rev-ok {
+            border-left: 4px solid #10b981;
+        }
+
+        .review-item.rev-ng {
+            border-left: 4px solid #ef4444;
+            background: #fffafa;
+        }
+
+        .rev-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            margin-bottom: 2px;
+            font-size: 0.8rem;
+        }
+
+        .rev-sentence {
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .rev-answers {
+            font-size: 0.78rem;
+            color: #475569;
+        }
+
+        /* ==================== ヒントモーダル ==================== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(3px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            border-radius: 18px;
+            max-width: 580px;
+            width: 100%;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: #1e3a8a;
+            color: white;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h3 {
+            font-family: 'Zen Maru Gothic', sans-serif;
+            font-size: 1rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 14px 18px;
+            overflow-y: auto;
+            font-size: 0.86rem;
+        }
+
+        .hint-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12px;
+        }
+
+        .hint-table th, .hint-table td {
+            border: 1px solid #cbd5e1;
+            padding: 6px 8px;
+            text-align: left;
+        }
+
+        .hint-table th {
+            background: #eff6ff;
+            color: #1e3a8a;
+            font-weight: 700;
+            width: 22%;
+        }
+
+        .hint-note {
+            background: #fefce8;
+            border: 1px solid #fde047;
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 0.82rem;
+            color: #713f12;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- ヘッダー -->
+    <header class="app-header">
+        <div class="header-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fcd34d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            <span>文法マスターへの道</span>
+        </div>
+        <button type="button" class="hint-toggle-btn" id="openHintBtn" aria-label="活用形のヒントを開く">
+            <span>💡 見分け方ヒント</span>
+        </button>
+    </header>
+
+    <!-- ==================== 1. スタート画面 ==================== -->
+    <section id="startScreen" class="screen active">
+        <div class="start-hero">
+            <div class="badge-pill">中学国語・文法トレーニング</div>
+            <div class="hero-emblem" aria-hidden="true">
+                <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#fde047" stroke="#d97706"/>
+                </svg>
+            </div>
+            <h1 class="main-title">文法マスターへの道</h1>
+            <p class="sub-title">～用言の活用編～</p>
+        </div>
+
+        <div class="rule-card">
+            <h3>📜 修行のルール</h3>
+            <ul class="rule-list">
+                <li><span class="dot">●</span><span>例文の <strong>【　】</strong> で囲まれた言葉（用言）の<strong>活用形</strong>を6つの中から選びましょう。</span></li>
+                <li><span class="dot">●</span><span>10問全問正解で<strong>「文法王」</strong>の認定証を授与します！</span></li>
+            </ul>
+        </div>
+
+        <button type="button" class="btn-primary" id="startBtn">
+            <span>挑戦をはじめる（全10問）</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+    </section>
+
+    <!-- ==================== 2. クイズ画面 ==================== -->
+    <section id="quizScreen" class="screen">
+        <div class="quiz-status-bar">
+            <div class="q-counter" id="qCounter">第 1 / 10 問</div>
+            <div class="score-pill">
+                <span class="combo-badge" id="comboBadge" style="display:none;">🔥 2連続正解!</span>
+                <span class="score-badge">正解数: <strong id="currentScore">0</strong></span>
+            </div>
+        </div>
+
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="question-box">
+            <div class="question-prompt">【　】の言葉の活用形を答えなさい。</div>
+            <div class="sentence-display" id="sentenceDisplay">
+                僕はジュースを<span class="target-word">【飲ま】</span>ない。
+            </div>
+        </div>
+
+        <!-- 6つの固定選択肢 -->
+        <div class="choices-grid" id="choicesGrid">
+            <button type="button" class="choice-btn" data-choice="未然形">未然形</button>
+            <button type="button" class="choice-btn" data-choice="連用形">連用形</button>
+            <button type="button" class="choice-btn" data-choice="終止形">終止形</button>
+            <button type="button" class="choice-btn" data-choice="連体形">連体形</button>
+            <button type="button" class="choice-btn" data-choice="仮定形">仮定形</button>
+            <button type="button" class="choice-btn" data-choice="命令形">命令形</button>
+        </div>
+
+        <!-- 正誤＆解説エリア -->
+        <div class="feedback-panel" id="feedbackPanel">
+            <div class="feedback-header" id="feedbackHeader">
+                <span id="feedbackIcon">⭕</span>
+                <span id="feedbackTitle">正解！</span>
+            </div>
+            <div class="grammar-meta" id="grammarMeta">
+                <!-- 品詞・活用の種類タグが動的に入る -->
+            </div>
+            <p class="explanation-text" id="explanationText"></p>
+            <button type="button" class="btn-primary btn-secondary" id="nextBtn">
+                <span id="nextBtnText">次の問題へ</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+        </div>
+    </section>
+
+    <!-- ==================== 3. リザルト画面 ==================== -->
+    <section id="resultScreen" class="screen">
+        <div class="result-header">
+            <div class="badge-pill">10問チャレンジ結果発表</div>
+        </div>
+
+        <div class="rank-card" id="rankCard">
+            <div id="rankIconContainer" style="margin-bottom: 4px;"></div>
+            <div class="rank-label">あなたの認定ランク</div>
+            <div class="rank-title" id="rankTitle">文法王</div>
+            <div class="score-big">10問中 <span id="finalScore">10</span> 問正解！</div>
+            <p class="rank-comment" id="rankComment"></p>
+        </div>
+
+        <div class="review-section">
+            <h3>📋 今回の出題ふりかえり</h3>
+            <div class="review-list" id="reviewList">
+                <!-- 10問の結果履歴が動的に入る -->
+            </div>
+        </div>
+
+        <button type="button" class="btn-primary" id="retryBtn">
+            <span>もう一度挑戦する（新しい10問）</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+        </button>
+    </section>
+</div>
+
+<!-- ==================== 見分け方ヒントモーダル ==================== -->
+<div class="modal-overlay" id="hintModal" role="dialog" aria-modal="true" aria-labelledby="hintModalTitle">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 id="hintModalTitle">💡 活用形の見分け方（後ろに続く言葉）</h3>
+            <button type="button" class="modal-close" id="closeHintBtn" aria-label="閉じる">&times;</button>
+        </div>
+        <div class="modal-body">
+            <table class="hint-table">
+                <thead>
+                    <tr>
+                        <th>活用形</th>
+                        <th>後ろに続く主な言葉・特徴</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>未然形</th>
+                        <td><strong>〜ない・〜う・〜よう・〜れる・〜せる</strong><br><small>（例：飲ま<u>ない</u>、走ろ<u>う</u>、静かだろ<u>う</u>）</small></td>
+                    </tr>
+                    <tr>
+                        <th>連用形</th>
+                        <td><strong>〜ます・〜た（だ）・〜て（で）・用言（動詞など）</strong><br><small>（例：書き<u>ます</u>、起き<u>た</u>、美し<u>く</u>咲く、元気<u>に</u>歩く）</small></td>
+                    </tr>
+                    <tr>
+                        <th>終止形</th>
+                        <td><strong>言い切り（。）、〜から、〜けれど、〜と</strong><br><small>（例：本を読む<u>。</u>、空が青い<u>。</u>、親切だ<u>。</u>）</small></td>
+                    </tr>
+                    <tr>
+                        <th>連体形</th>
+                        <td><strong>体言（名詞）、〜とき、〜こと、〜の、〜ので</strong><br><small>（例：走る<u>人</u>、高い<u>山</u>、きれいな<u>花</u>）</small></td>
+                    </tr>
+                    <tr>
+                        <th>仮定形</th>
+                        <td><strong>〜ば</strong>（仮定の条件を表す）<br><small>（例：読め<u>ば</u>、見れ<u>ば</u>、寒けれ<u>ば</u>、静かなら<u>ば</u>）</small></td>
+                    </tr>
+                    <tr>
+                        <th>命令形</th>
+                        <td><strong>命令の言い切り（！・。）</strong><br><small>（例：早く走れ<u>！</u>、起きろ<u>。</u>、勉強しろ<u>。</u>、来い<u>。</u>）</small></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="hint-note">
+                <strong>ワンポイント：</strong>形容詞や形容動詞は、同じ形（例：「青い」の終止形と連体形）があるよ。<strong>文が言い切りなら「終止形」、後ろに名詞（体言）が続けば「連体形」</strong>と見分けよう！
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+/**
+ * ============================================================================
+ * 用言の活用 クイズデータストック（全105問）
+ * カテゴリ内訳（各15問 × 7種類 = 105問）：
+ * 1. 動詞・五段活用 (15問)
+ * 2. 動詞・上一段活用 (15問)
+ * 3. 動詞・下一段活用 (15問)
+ * 4. 動詞・サ行変格活用 (15問)
+ * 5. 動詞・カ行変格活用 (15問)
+ * 6. 形容詞 (15問)
+ * 7. 形容動詞 (15問)
+ * ============================================================================
+ */
+const QUESTION_BANK = [
+    // ==================== 1. 動詞・五段活用 (15問) ====================
+    {
+        before: "僕はジュースを", target: "飲ま", after: "ない。",
+        answer: "未然形", pos: "動詞", type: "五段活用", base: "飲む",
+        explanation: "「飲む」（マ行五段活用）の未然形です。打消の助動詞「ない」に続いています。"
+    },
+    {
+        before: "明日は早く", target: "走ろ", after: "うと思う。",
+        answer: "未然形", pos: "動詞", type: "五段活用", base: "走る",
+        explanation: "「走る」（ラ行五段活用）の未然形です。意志を表す助動詞「う」に続いています。"
+    },
+    {
+        before: "先生に名前を", target: "呼ば", after: "れた。",
+        answer: "未然形", pos: "動詞", type: "五段活用", base: "呼ぶ",
+        explanation: "「呼ぶ」（バ行五段活用）の未然形です。受身の助動詞「れる」に続いています。"
+    },
+    {
+        before: "丁寧に漢字を", target: "書き", after: "ます。",
+        answer: "連用形", pos: "動詞", type: "五段活用", base: "書く",
+        explanation: "「書く」（カ行五段活用）の連用形です。丁寧の助動詞「ます」に続いています。"
+    },
+    {
+        before: "昨日、友達と公園で", target: "遊ん", after: "だ。",
+        answer: "連用形", pos: "動詞", type: "五段活用", base: "遊ぶ",
+        explanation: "「遊ぶ」（バ行五段活用）の連用形が音便化した形です。過去の助動詞「だ（た）」に続いています。"
+    },
+    {
+        before: "川に沿ってゆっくり", target: "歩い", after: "て帰る。",
+        answer: "連用形", pos: "動詞", type: "五段活用", base: "歩く",
+        explanation: "「歩く」（カ行五段活用）の連用形（イ音便）です。接続助詞「て」に続いています。"
+    },
+    {
+        before: "図書館で歴史の本を", target: "読む", after: "。",
+        answer: "終止形", pos: "動詞", type: "五段活用", base: "読む",
+        explanation: "「読む」（マ行五段活用）の終止形です。文の終わり（言い切り）に使われています。"
+    },
+    {
+        before: "雨が", target: "降る", after: "から、傘を持っていこう。",
+        answer: "終止形", pos: "動詞", type: "五段活用", base: "降る",
+        explanation: "「降る」（ラ行五段活用）の終止形です。接続助詞「から」の前にある形は終止形です。"
+    },
+    {
+        before: "校庭を", target: "走る", after: "生徒たちの声が聞こえる。",
+        answer: "連体形", pos: "動詞", type: "五段活用", base: "走る",
+        explanation: "「走る」（ラ行五段活用）の連体形です。後ろの体言（名詞）「生徒たち」を修飾しています。"
+    },
+    {
+        before: "ピアノを", target: "弾く", after: "ことが私の趣味です。",
+        answer: "連体形", pos: "動詞", type: "五段活用", base: "弾く",
+        explanation: "「弾く」（カ行五段活用）の連体形です。形式名詞「こと」に続いています。"
+    },
+    {
+        before: "この本を", target: "読め", after: "ば、意味がわかるはずだ。",
+        answer: "仮定形", pos: "動詞", type: "五段活用", base: "読む",
+        explanation: "「読む」（マ行五段活用）の仮定形です。仮定条件を表す接続助詞「ば」に続いています。"
+    },
+    {
+        before: "もっと早く", target: "泳げ", after: "ば、新記録が出せるのに。",
+        answer: "仮定形", pos: "動詞", type: "五段活用", base: "泳ぐ",
+        explanation: "「泳ぐ」（ガ行五段活用）の仮定形です。接続助詞「ば」に続いています。"
+    },
+    {
+        before: "時間がないから、急いで", target: "行け", after: "！",
+        answer: "命令形", pos: "動詞", type: "五段活用", base: "行く",
+        explanation: "「行く」（カ行五段活用）の命令形です。相手への命令で文を言い切っています。"
+    },
+    {
+        before: "自分の意見をはっきり", target: "言え", after: "。",
+        answer: "命令形", pos: "動詞", type: "五段活用", base: "言う",
+        explanation: "「言う」（ワ行五段活用）の命令形です。命令の言い切りになっています。"
+    },
+    {
+        before: "みんなで協力してゴミを", target: "拾お", after: "う。",
+        answer: "未然形", pos: "動詞", type: "五段活用", base: "拾う",
+        explanation: "「拾う」（ワ行五段活用）の未然形です。勧誘を表す助動詞「う」に続いています。"
+    },
+
+    // ==================== 2. 動詞・上一段活用 (15問) ====================
+    {
+        before: "夜更かしをしたので、朝早く", target: "起き", after: "られない。",
+        answer: "未然形", pos: "動詞", type: "上一段活用", base: "起きる",
+        explanation: "「起きる」（カ行上一段活用）の未然形です。可能・打消の「られない」に続いています。"
+    },
+    {
+        before: "明日は大切な用事があるので、早く", target: "起き", after: "よう。",
+        answer: "未然形", pos: "動詞", type: "上一段活用", base: "起きる",
+        explanation: "「起きる」（カ行上一段活用）の未然形です。意志の助動詞「よう」に続いています。"
+    },
+    {
+        before: "テレビをあまり近くで", target: "見", after: "ないほうがいい。",
+        answer: "未然形", pos: "動詞", type: "上一段活用", base: "見る",
+        explanation: "「見る」（マ行上一段活用）の未然形です。打消の助動詞「ない」に続いています。"
+    },
+    {
+        before: "昨日、美術館で有名な絵画を", target: "見", after: "た。",
+        answer: "連用形", pos: "動詞", type: "上一段活用", base: "見る",
+        explanation: "「見る」（マ行上一段活用）の連用形です。過去の助動詞「た」に続いています。"
+    },
+    {
+        before: "寒い朝はなかなか布団から", target: "起き", after: "てこられない。",
+        answer: "連用形", pos: "動詞", type: "上一段活用", base: "起きる",
+        explanation: "「起きる」（カ行上一段活用）の連用形です。接続助詞「て」に続いています。"
+    },
+    {
+        before: "駅のホームで電車を", target: "降り", after: "ます。",
+        answer: "連用形", pos: "動詞", type: "上一段活用", base: "降りる",
+        explanation: "「降りる」（ラ行上一段活用）の連用形です。丁寧の助動詞「ます」に続いています。"
+    },
+    {
+        before: "毎晩、寝る前にニュースを", target: "見る", after: "。",
+        answer: "終止形", pos: "動詞", type: "上一段活用", base: "見る",
+        explanation: "「見る」（マ行上一段活用）の終止形です。文の終わり（言い切り）です。"
+    },
+    {
+        before: "秋になると、木の葉が地面に", target: "落ちる", after: "。",
+        answer: "終止形", pos: "動詞", type: "上一段活用", base: "落ちる",
+        explanation: "「落ちる」（タ行上一段活用）の終止形です。文の言い切りになっています。"
+    },
+    {
+        before: "山頂から", target: "見る", after: "朝日はとても美しい。",
+        answer: "連体形", pos: "動詞", type: "上一段活用", base: "見る",
+        explanation: "「見る」（マ行上一段活用）の連体形です。後ろの名詞「朝日」を修飾しています。"
+    },
+    {
+        before: "階段を", target: "降りる", after: "ときは足元に気をつけよう。",
+        answer: "連体形", pos: "動詞", type: "上一段活用", base: "降りる",
+        explanation: "「降りる」（ラ行上一段活用）の連体形です。名詞「とき」に続いています。"
+    },
+    {
+        before: "よく", target: "見れ", after: "ば、そこに小さな虫がいる。",
+        answer: "仮定形", pos: "動詞", type: "上一段活用", base: "見る",
+        explanation: "「見る」（マ行上一段活用）の仮定形です。仮定条件を表す接続助詞「ば」に続いています。"
+    },
+    {
+        before: "六時に", target: "起きれ", after: "ば、始発のバスに間に合う。",
+        answer: "仮定形", pos: "動詞", type: "上一段活用", base: "起きる",
+        explanation: "「起きる」（カ行上一段活用）の仮定形です。接続助詞「ば」に続いています。"
+    },
+    {
+        before: "もう七時だ、早く", target: "起きろ", after: "！",
+        answer: "命令形", pos: "動詞", type: "上一段活用", base: "起きる",
+        explanation: "「起きる」（カ行上一段活用）の命令形です。相手への命令で言い切っています。"
+    },
+    {
+        before: "黒板の文字をしっかり", target: "見ろ", after: "。",
+        answer: "命令形", pos: "動詞", type: "上一段活用", base: "見る",
+        explanation: "「見る」（マ行上一段活用）の命令形です。命令の言い切りです。"
+    },
+    {
+        before: "次の駅で電車を", target: "降りよ", after: "う。",
+        answer: "未然形", pos: "動詞", type: "上一段活用", base: "降りる",
+        explanation: "「降りる」（ラ行上一段活用）の未然形です。勧誘の助動詞「よう」に続いています。"
+    },
+
+    // ==================== 3. 動詞・下一段活用 (15問) ====================
+    {
+        before: "嫌いな野菜でも残さずに", target: "食べ", after: "よう。",
+        answer: "未然形", pos: "動詞", type: "下一段活用", base: "食べる",
+        explanation: "「食べる」（バ行下一段活用）の未然形です。意志の助動詞「よう」に続いています。"
+    },
+    {
+        before: "大切な約束を絶対に", target: "忘れ", after: "ない。",
+        answer: "未然形", pos: "動詞", type: "下一段活用", base: "忘れる",
+        explanation: "「忘れる」（ラ行下一段活用）の未然形です。打消の助動詞「ない」に続いています。"
+    },
+    {
+        before: "難問は自力で解きたいので、答えは", target: "教え", after: "てもらわない。",
+        answer: "未然形", pos: "動詞", type: "下一段活用", base: "教える",
+        explanation: "「教える」（ア行下一段活用）の未然形です。打消の「ない」に続いています。"
+    },
+    {
+        before: "今朝はパンと目玉焼きを", target: "食べ", after: "ました。",
+        answer: "連用形", pos: "動詞", type: "下一段活用", base: "食べる",
+        explanation: "「食べる」（バ行下一段活用）の連用形です。丁寧の助動詞「ます（ました）」に続いています。"
+    },
+    {
+        before: "教室の窓を静かに", target: "開け", after: "た。",
+        answer: "連用形", pos: "動詞", type: "下一段活用", base: "開ける",
+        explanation: "「開ける」（カ行下一段活用）の連用形です。過去の助動詞「た」に続いています。"
+    },
+    {
+        before: "友だちに道の行き方を", target: "教え", after: "てあげた。",
+        answer: "連用形", pos: "動詞", type: "下一段活用", base: "教える",
+        explanation: "「教える」（ア行下一段活用）の連用形です。接続助詞「て」に続いています。"
+    },
+    {
+        before: "家族みんなで夕食を", target: "食べる", after: "。",
+        answer: "終止形", pos: "動詞", type: "下一段活用", base: "食べる",
+        explanation: "「食べる」（バ行下一段活用）の終止形です。文の言い切りに使われています。"
+    },
+    {
+        before: "空に美しい虹が", target: "見える", after: "。",
+        answer: "終止形", pos: "動詞", type: "下一段活用", base: "見える",
+        explanation: "「見える」（ア行下一段活用）の終止形です。文の終わり（言い切り）です。"
+    },
+    {
+        before: "母が作った料理を", target: "食べる", after: "時間が一番好きだ。",
+        answer: "連体形", pos: "動詞", type: "下一段活用", base: "食べる",
+        explanation: "「食べる」（バ行下一段活用）の連体形です。後ろの名詞「時間」を修飾しています。"
+    },
+    {
+        before: "答えを", target: "考える", after: "力は毎日の練習で身につく。",
+        answer: "連体形", pos: "動詞", type: "下一段活用", base: "考える",
+        explanation: "「考える」（ア行下一段活用）の連体形です。名詞「力」に続いています。"
+    },
+    {
+        before: "よく", target: "考えれ", after: "ば、きっと解決策が見つかる。",
+        answer: "仮定形", pos: "動詞", type: "下一段活用", base: "考える",
+        explanation: "「考える」（ア行下一段活用）の仮定形です。接続助詞「ば」に続いています。"
+    },
+    {
+        before: "窓を", target: "開けれ", after: "ば、涼しい風が入ってくる。",
+        answer: "仮定形", pos: "動詞", type: "下一段活用", base: "開ける",
+        explanation: "「開ける」（カ行下一段活用）の仮定形です。仮定を表す「ば」に続いています。"
+    },
+    {
+        before: "冷めないうちに早く", target: "食べろ", after: "。",
+        answer: "命令形", pos: "動詞", type: "下一段活用", base: "食べる",
+        explanation: "「食べる」（バ行下一段活用）の命令形です。命令の言い切りになっています。"
+    },
+    {
+        before: "自分の頭でしっかり", target: "考えろ", after: "！",
+        answer: "命令形", pos: "動詞", type: "下一段活用", base: "考える",
+        explanation: "「考える」（ア行下一段活用）の命令形です。命令の言い切りです。"
+    },
+    {
+        before: "ドアを静かに", target: "閉めよ", after: "う。",
+        answer: "未然形", pos: "動詞", type: "下一段活用", base: "閉める",
+        explanation: "「閉める」（マ行下一段活用）の未然形です。意志の助動詞「よう」に続いています。"
+    },
+
+    // ==================== 4. 動詞・サ行変格活用 (15問) ====================
+    {
+        before: "今日は疲れたので、無理を", target: "し", after: "ない。",
+        answer: "未然形", pos: "動詞", type: "サ行変格活用", base: "する",
+        explanation: "「する」（サ行変格活用）の未然形です。打消の助動詞「ない」に続いています。サ変の未然形は「し・せ・さ」の3通りあります。"
+    },
+    {
+        before: "明日のテストに向けて一生懸命", target: "勉強し", after: "よう。",
+        answer: "未然形", pos: "動詞", type: "サ行変格活用", base: "勉強する",
+        explanation: "「勉強する」（サ行変格活用）の未然形です。意志の助動詞「よう」に続いています。"
+    },
+    {
+        before: "後悔", target: "せ", after: "ずに全力を出し切ろう。",
+        answer: "未然形", pos: "動詞", type: "サ行変格活用", base: "後悔する",
+        explanation: "「後悔する」（サ行変格活用）の未然形「せ」に、打消の助動詞「ず」が続いています。"
+    },
+    {
+        before: "先生に質問を", target: "さ", after: "れた。",
+        answer: "未然形", pos: "動詞", type: "サ行変格活用", base: "質問する",
+        explanation: "「質問する」（サ行変格活用）の未然形「さ」に、受身の助動詞「れる」が続いています。"
+    },
+    {
+        before: "放課後に体育館でバスケットボールを", target: "し", after: "た。",
+        answer: "連用形", pos: "動詞", type: "サ行変格活用", base: "する",
+        explanation: "「する」（サ行変格活用）の連用形です。過去の助動詞「た」に続いています。"
+    },
+    {
+        before: "毎日欠かさずジョギングを", target: "し", after: "ます。",
+        answer: "連用形", pos: "動詞", type: "サ行変格活用", base: "する",
+        explanation: "「する」（サ行変格活用）の連用形です。丁寧の助動詞「ます」に続いています。"
+    },
+    {
+        before: "クラス全員で協力して", target: "準備し", after: "てきた。",
+        answer: "連用形", pos: "動詞", type: "サ行変格活用", base: "準備する",
+        explanation: "「準備する」（サ行変格活用）の連用形です。接続助詞「て」に続いています。"
+    },
+    {
+        before: "週末は家族とキャンプを", target: "する", after: "。",
+        answer: "終止形", pos: "動詞", type: "サ行変格活用", base: "する",
+        explanation: "「する」（サ行変格活用）の終止形です。文の終わり（言い切り）です。"
+    },
+    {
+        before: "彼はいつも親切に", target: "案内する", after: "。",
+        answer: "終止形", pos: "動詞", type: "サ行変格活用", base: "案内する",
+        explanation: "「案内する」（サ行変格活用）の終止形です。文の言い切りになっています。"
+    },
+    {
+        before: "新しいことに", target: "挑戦する", after: "姿勢が大切だ。",
+        answer: "連体形", pos: "動詞", type: "サ行変格活用", base: "挑戦する",
+        explanation: "「挑戦する」（サ行変格活用）の連体形です。後ろの名詞「姿勢」を修飾しています。"
+    },
+    {
+        before: "料理を", target: "する", after: "のがとても楽しい。",
+        answer: "連体形", pos: "動詞", type: "サ行変格活用", base: "する",
+        explanation: "「する」（サ行変格活用）の連体形です。準体助詞（名詞と同じ働きをする）「の」に続いています。"
+    },
+    {
+        before: "毎日少しずつ", target: "練習すれ", after: "ば、必ず上達する。",
+        answer: "仮定形", pos: "動詞", type: "サ行変格活用", base: "練習する",
+        explanation: "「練習する」（サ行変格活用）の仮定形です。接続助詞「ば」に続いています。"
+    },
+    {
+        before: "よく", target: "注意すれ", after: "ば、ミスは防げるはずだ。",
+        answer: "仮定形", pos: "動詞", type: "サ行変格活用", base: "注意する",
+        explanation: "「注意する」（サ行変格活用）の仮定形です。接続助詞「ば」に続いています。"
+    },
+    {
+        before: "ゲームばかりしていないで、早く宿題を", target: "しろ", after: "！",
+        answer: "命令形", pos: "動詞", type: "サ行変格活用", base: "する",
+        explanation: "「する」（サ行変格活用）の命令形です。サ変の命令形は「しろ・せよ」の形をとります。"
+    },
+    {
+        before: "出発の時刻に遅れないよう", target: "行動せよ", after: "。",
+        answer: "命令形", pos: "動詞", type: "サ行変格活用", base: "行動する",
+        explanation: "「行動する」（サ行変格活用）の命令形「せよ」です。命令の言い切りです。"
+    },
+
+    // ==================== 5. 動詞・カ行変格活用 (15問) ====================
+    {
+        before: "今日は風邪をひいたので、学校へ", target: "こ", after: "ない。",
+        answer: "未然形", pos: "動詞", type: "カ行変格活用", base: "くる（来る）",
+        explanation: "「くる（来る）」（カ行変格活用）の未然形です。打消の助動詞「ない」に続いています（読みは「こ」）。"
+    },
+    {
+        before: "来週の日曜日もまたこの公園に", target: "こ", after: "よう。",
+        answer: "未然形", pos: "動詞", type: "カ行変格活用", base: "くる（来る）",
+        explanation: "「くる（来る）」（カ行変格活用）の未然形です。意志の助動詞「よう」に続いています（読みは「こ」）。"
+    },
+    {
+        before: "せっかく誘ったのに、彼はパーティーに", target: "こ", after: "なかった。",
+        answer: "未然形", pos: "動詞", type: "カ行変格活用", base: "くる（来る）",
+        explanation: "「くる（来る）」（カ行変格活用）の未然形です。打消の「なかった」に続いています。"
+    },
+    {
+        before: "さっき玄関に宅配便が", target: "き", after: "た。",
+        answer: "連用形", pos: "動詞", type: "カ行変格活用", base: "くる（来る）",
+        explanation: "「くる（来る）」（カ行変格活用）の連用形です。過去の助動詞「た」に続いています（読みは「き」）。"
+    },
+    {
+        before: "明日の朝、九時にそちらへ", target: "き", after: "ます。",
+        answer: "連用形", pos: "動詞", type: "カ行変格活用", base: "くる（来る）",
+        explanation: "「くる（来る）」（カ行変格活用）の連用形です。丁寧の助動詞「ます」に続いています（読みは「き」）。"
+    },
+    {
+        before: "重い荷物を抱えてここまで歩いて", target: "き", after: "た。",
+        answer: "連用形", pos: "動詞", type: "カ行変格活用", base: "くる（来る）",
+        explanation: "「くる（来る）」（カ行変格活用）の連用形です。助動詞「た」に続いています。"
+    },
+    {
+        before: "もうすぐ待望の春が", target: "くる", after: "。",
+        answer: "終止形", pos: "動詞", type: "カ行変格活用", base: "くる（来る）",
+        explanation: "「くる（来る）」（カ行変格活用）の終止形です。文の終わり（言い切り）です。"
+    },
+    {
+        before: "あと五分でバスが", target: "くる", after: "から、急ごう。",
+        answer: "終止形", pos: "動詞", type: "カ行変格活用", base: "くる（来る）",
+        explanation: "「くる（来る）」（カ行変格活用）の終止形です。接続助詞「から」の前にある終止形です。"
+    },
+    {
+        before: "次に", target: "くる", after: "電車に乗って駅へ向かおう。",
+        answer: "連体形", pos: "動詞", type: "カ行変格活用", base: "くる（来る）",
+        explanation: "「くる（来る）」（カ行変格活用）の連体形です。後ろの名詞「電車」を修飾しています。"
+    },
+    {
+        before: "ここへ", target: "くる", after: "途中にきれいな花屋があった。",
+        answer: "連体形", pos: "動詞", type: "カ行変格活用", base: "くる（来る）",
+        explanation: "「くる（来る）」（カ行変格活用）の連体形です。名詞「途中」に続いています。"
+    },
+    {
+        before: "あなたが一緒に", target: "くれ", after: "ば、心強いのに。",
+        answer: "仮定形", pos: "動詞", type: "カ行変格活用", base: "くる（来る）",
+        explanation: "「くる（来る）」（カ行変格活用）の仮定形です。接続助詞「ば」に続いています。"
+    },
+    {
+        before: "もっと早く", target: "くれ", after: "ば、席が空いていたよ。",
+        answer: "仮定形", pos: "動詞", type: "カ行変格活用", base: "くる（来る）",
+        explanation: "「くる（来る）」（カ行変格活用）の仮定形です。仮定を表す「ば」に続いています。"
+    },
+    {
+        before: "用事があるから、ちょっとこっちへ", target: "こい", after: "。",
+        answer: "命令形", pos: "動詞", type: "カ行変格活用", base: "くる（来る）",
+        explanation: "「くる（来る）」（カ行変格活用）の命令形です。カ変の命令形は「こい（来い）」です。"
+    },
+    {
+        before: "危ないから、早くこちらへ", target: "こい", after: "！",
+        answer: "命令形", pos: "動詞", type: "カ行変格活用", base: "くる（来る）",
+        explanation: "「くる（来る）」（カ行変格活用）の命令形です。命令の言い切りになっています。"
+    },
+    {
+        before: "雨が降りそうだから、今日は誰も遊びに", target: "こ", after: "ないだろう。",
+        answer: "未然形", pos: "動詞", type: "カ行変格活用", base: "くる（来る）",
+        explanation: "「くる（来る）」（カ行変格活用）の未然形です。打消の助動詞「ない」に続いています。"
+    },
+
+    // ==================== 6. 形容詞 (15問) ====================
+    {
+        before: "明日の朝はきっと", target: "寒かろ", after: "う。",
+        answer: "未然形", pos: "形容詞", type: "形容詞の活用", base: "寒い",
+        explanation: "形容詞「寒い」の未然形です。推量の助動詞「う」に続くときは「〜かろ」の形になります。"
+    },
+    {
+        before: "この問題はとても", target: "難しかろ", after: "うと思う。",
+        answer: "未然形", pos: "形容詞", type: "形容詞の活用", base: "難しい",
+        explanation: "形容詞「難しい」の未然形です。助動詞「う」に続いています。"
+    },
+    {
+        before: "山頂の空気はとても", target: "冷たかっ", after: "た。",
+        answer: "連用形", pos: "形容詞", type: "形容詞の活用", base: "冷たい",
+        explanation: "形容詞「冷たい」の連用形です。過去の助動詞「た」に続くときは「〜かっ」の形になります。"
+    },
+    {
+        before: "庭の桜の花が", target: "美しく", after: "咲いている。",
+        answer: "連用形", pos: "形容詞", type: "形容詞の活用", base: "美しい",
+        explanation: "形容詞「美しい」の連用形です。後ろの用言（動詞）「咲いている」を修飾しています。"
+    },
+    {
+        before: "今日は昨日ほど", target: "暑く", after: "ない。",
+        answer: "連用形", pos: "形容詞", type: "形容詞の活用", base: "暑い",
+        explanation: "形容詞「暑い」の連用形です。補助形容詞「ない」に続く形は連用形（「〜く」）なので注意しよう！"
+    },
+    {
+        before: "試験に合格して本当に", target: "うれしかっ", after: "た。",
+        answer: "連用形", pos: "形容詞", type: "形容詞の活用", base: "うれしい",
+        explanation: "形容詞「うれしい」の連用形です。過去の助動詞「た」に続いています。"
+    },
+    {
+        before: "今日の空は雲一つなく", target: "青い", after: "。",
+        answer: "終止形", pos: "形容詞", type: "形容詞の活用", base: "青い",
+        explanation: "形容詞「青い」の終止形です。文の終わり（言い切り）に使われています。"
+    },
+    {
+        before: "この小説はとても", target: "おもしろい", after: "から、ぜひ読んでみて。",
+        answer: "終止形", pos: "形容詞", type: "形容詞の活用", base: "おもしろい",
+        explanation: "形容詞「おもしろい」の終止形です。接続助詞「から」の前にある形は終止形です。"
+    },
+    {
+        before: "夏休みに", target: "高い", after: "山へ登った。",
+        answer: "連体形", pos: "形容詞", type: "形容詞の活用", base: "高い",
+        explanation: "形容詞「高い」の連体形です。後ろの名詞「山」を修飾しています。"
+    },
+    {
+        before: "彼は", target: "優しい", after: "性格なのでみんなに好かれている。",
+        answer: "連体形", pos: "形容詞", type: "形容詞の活用", base: "優しい",
+        explanation: "形容詞「優しい」の連体形です。名詞「性格」に続いています。"
+    },
+    {
+        before: "駅まで", target: "遠い", after: "ので、自転車で行く。",
+        answer: "連体形", pos: "形容詞", type: "形容詞の活用", base: "遠い",
+        explanation: "形容詞「遠い」の連体形です。接続助詞「ので」の前にある活用形は連体形です。"
+    },
+    {
+        before: "値段が", target: "安けれ", after: "ば、もう一つ買おう。",
+        answer: "仮定形", pos: "形容詞", type: "形容詞の活用", base: "安い",
+        explanation: "形容詞「安い」の仮定形です。仮定条件を表す接続助詞「ば」に続いています。"
+    },
+    {
+        before: "天気が", target: "よけれ", after: "ば、明日ピクニックに行こう。",
+        answer: "仮定形", pos: "形容詞", type: "形容詞の活用", base: "よい",
+        explanation: "形容詞「よい」の仮定形です。接続助詞「ば」に続いています。"
+    },
+    {
+        before: "時間が", target: "なけれ", after: "ば、タクシーを使おう。",
+        answer: "仮定形", pos: "形容詞", type: "形容詞の活用", base: "ない",
+        explanation: "形容詞「ない」の仮定形です。接続助詞「ば」に続いています。"
+    },
+    {
+        before: "風邪をひかないように", target: "暖かく", after: "して寝なさい。",
+        answer: "連用形", pos: "形容詞", type: "形容詞の活用", base: "暖かい",
+        explanation: "形容詞「暖かい」の連用形です。後ろの動詞「して」に続いています。"
+    },
+
+    // ==================== 7. 形容動詞 (15問) ====================
+    {
+        before: "図書館の中はきっと", target: "静かだろ", after: "う。",
+        answer: "未然形", pos: "形容動詞", type: "形容動詞の活用", base: "静かだ",
+        explanation: "形容動詞「静かだ」の未然形です。推量の助動詞「う」に続くときは「〜だろ」の形になります。"
+    },
+    {
+        before: "この地域の自然は", target: "豊かだろ", after: "うと思われる。",
+        answer: "未然形", pos: "形容動詞", type: "形容動詞の活用", base: "豊かだ",
+        explanation: "形容動詞「豊かだ」の未然形です。助動詞「う」に続いています。"
+    },
+    {
+        before: "昨日の体育館はとても", target: "にぎやかだっ", after: "た。",
+        answer: "連用形", pos: "形容動詞", type: "形容動詞の活用", base: "にぎやかだ",
+        explanation: "形容動詞「にぎやかだ」の連用形です。過去の助動詞「た」に続くときは「〜だっ」の形になります。"
+    },
+    {
+        before: "彼は毎日", target: "健康で", after: "過ごしている。",
+        answer: "連用形", pos: "形容動詞", type: "形容動詞の活用", base: "健康だ",
+        explanation: "形容動詞「健康だ」の連用形です。「〜だっ・〜で・〜に」は形容動詞の連用形です。"
+    },
+    {
+        before: "教室を", target: "きれいに", after: "掃除した。",
+        answer: "連用形", pos: "形容動詞", type: "形容動詞の活用", base: "きれいだ",
+        explanation: "形容動詞「きれいだ」の連用形です。後ろの動詞「掃除した」を修飾しています。"
+    },
+    {
+        before: "祖母は今でもとても", target: "元気だ", after: "。",
+        answer: "終止形", pos: "形容動詞", type: "形容動詞の活用", base: "元気だ",
+        explanation: "形容動詞「元気だ」の終止形です。文の終わり（言い切り）に使われています。"
+    },
+    {
+        before: "この街は交通が", target: "便利だ", after: "から、住みやすい。",
+        answer: "終止形", pos: "形容動詞", type: "形容動詞の活用", base: "便利だ",
+        explanation: "形容動詞「便利だ」の終止形です。接続助詞「から」の前にある形は終止形です。"
+    },
+    {
+        before: "彼女はいつも誰にでも", target: "親切だ", after: "。",
+        answer: "終止形", pos: "形容動詞", type: "形容動詞の活用", base: "親切だ",
+        explanation: "形容動詞「親切だ」の終止形です。文の言い切りになっています。"
+    },
+    {
+        before: "花壇に", target: "きれいな", after: "花が咲いている。",
+        answer: "連体形", pos: "形容動詞", type: "形容動詞の活用", base: "きれいだ",
+        explanation: "形容動詞「きれいだ」の連体形です。名詞「花」を修飾するときは「〜な」の形になります。"
+    },
+    {
+        before: "それはとても", target: "重要な", after: "問題だ。",
+        answer: "連体形", pos: "形容動詞", type: "形容動詞の活用", base: "重要だ",
+        explanation: "形容動詞「重要だ」の連体形です。後ろの名詞「問題」に続いています。"
+    },
+    {
+        before: "絵を描くことが", target: "好きな", after: "ので、美術部に入った。",
+        answer: "連体形", pos: "形容動詞", type: "形容動詞の活用", base: "好きだ",
+        explanation: "形容動詞「好きだ」の連体形です。接続助詞「ので」の前にある形は連体形（「〜な」）です。"
+    },
+    {
+        before: "周囲が", target: "静かなら", after: "ば、勉強に集中できる。",
+        answer: "仮定形", pos: "形容動詞", type: "形容動詞の活用", base: "静かだ",
+        explanation: "形容動詞「静かだ」の仮定形です。仮定を表す「ば」に続くときは「〜なら」の形になります。"
+    },
+    {
+        before: "時間が", target: "自由なら", after: "、旅行に行きたい。",
+        answer: "仮定形", pos: "形容動詞", type: "形容動詞の活用", base: "自由だ",
+        explanation: "形容動詞「自由だ」の仮定形です。形容動詞の仮定形は「〜なら」です（「ば」が省略されることもあります）。"
+    },
+    {
+        before: "計算が", target: "正確なら", after: "ば、満点が取れるはずだ。",
+        answer: "仮定形", pos: "形容動詞", type: "形容動詞の活用", base: "正確だ",
+        explanation: "形容動詞「正確だ」の仮定形です。接続助詞「ば」に続いています。"
+    },
+    {
+        before: "自分の考えをみんなの前で", target: "立派に", after: "報告した。",
+        answer: "連用形", pos: "形容動詞", type: "形容動詞の活用", base: "立派だ",
+        explanation: "形容動詞「立派だ」の連用形です。動詞「報告した」を修飾しています。"
+    }
+];
+
+/**
+ * アプリケーション状態管理
+ */
+const state = {
+    quizQuestions: [],   // 今回の10問
+    currentIndex: 0,     // 現在の問題インデックス (0〜9)
+    score: 0,            // 正解数
+    combo: 0,            // 連続正解数
+    answered: false,     // 現在の問題に回答済みか
+    history: []          // 10問の回答履歴
+};
+
+// DOM要素の取得
+const startScreen = document.getElementById('startScreen');
+const quizScreen = document.getElementById('quizScreen');
+const resultScreen = document.getElementById('resultScreen');
+
+const startBtn = document.getElementById('startBtn');
+const retryBtn = document.getElementById('retryBtn');
+const nextBtn = document.getElementById('nextBtn');
+const nextBtnText = document.getElementById('nextBtnText');
+
+const qCounter = document.getElementById('qCounter');
+const currentScoreEl = document.getElementById('currentScore');
+const comboBadge = document.getElementById('comboBadge');
+const progressFill = document.getElementById('progressFill');
+const sentenceDisplay = document.getElementById('sentenceDisplay');
+const choiceBtns = document.querySelectorAll('.choice-btn');
+
+const feedbackPanel = document.getElementById('feedbackPanel');
+const feedbackIcon = document.getElementById('feedbackIcon');
+const feedbackTitle = document.getElementById('feedbackTitle');
+const grammarMeta = document.getElementById('grammarMeta');
+const explanationText = document.getElementById('explanationText');
+
+const rankCard = document.getElementById('rankCard');
+const rankIconContainer = document.getElementById('rankIconContainer');
+const rankTitle = document.getElementById('rankTitle');
+const finalScore = document.getElementById('finalScore');
+const rankComment = document.getElementById('rankComment');
+const reviewList = document.getElementById('reviewList');
+
+const hintModal = document.getElementById('hintModal');
+const openHintBtn = document.getElementById('openHintBtn');
+const closeHintBtn = document.getElementById('closeHintBtn');
+
+/**
+ * 配列をフィッシャー–イェーツのシャッフルでランダムに並べ替える
+ */
+function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+/**
+ * 画面切り替えヘルパー
+ */
+function showScreen(screenEl) {
+    [startScreen, quizScreen, resultScreen].forEach(s => s.classList.remove('active'));
+    screenEl.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/**
+ * 新しい10問セットでゲームを開始する
+ * （サ行変格活用・カ行変格活用は必ず1問ずつ出題、残りの8問はその他からランダム抽出）
+ */
+function startGame() {
+    const sahenQuestions = QUESTION_BANK.filter(q => q.type === "サ行変格活用");
+    const kahenQuestions = QUESTION_BANK.filter(q => q.type === "カ行変格活用");
+    const otherQuestions = QUESTION_BANK.filter(
+        q => q.type !== "サ行変格活用" && q.type !== "カ行変格活用"
+    );
+
+    const pickedSahen = shuffleArray(sahenQuestions).slice(0, 1);
+    const pickedKahen = shuffleArray(kahenQuestions).slice(0, 1);
+    const pickedOthers = shuffleArray(otherQuestions).slice(0, 8);
+
+    // 合計10問を合わせて出題順もランダムにシャッフル
+    state.quizQuestions = shuffleArray([
+        ...pickedSahen,
+        ...pickedKahen,
+        ...pickedOthers
+    ]);
+
+    state.currentIndex = 0;
+    state.score = 0;
+    state.combo = 0;
+    state.answered = false;
+    state.history = [];
+
+    currentScoreEl.textContent = '0';
+    comboBadge.style.display = 'none';
+
+    showScreen(quizScreen);
+    renderQuestion();
+}
+
+/**
+ * 現在の問題を描画する
+ */
+function renderQuestion() {
+    const q = state.quizQuestions[state.currentIndex];
+    state.answered = false;
+
+    // 進捗表示の更新
+    const qNum = state.currentIndex + 1;
+    qCounter.textContent = `第 ${qNum} / 10 問`;
+    progressFill.style.width = `${qNum * 10}%`;
+
+    // 問題文の表示（【 】の強調）
+    sentenceDisplay.innerHTML = `${escapeHtml(q.before)}<span class="target-word">【${escapeHtml(q.target)}】</span>${escapeHtml(q.after)}`;
+
+    // ボタンの状態リセット
+    choiceBtns.forEach(btn => {
+        btn.disabled = false;
+        btn.classList.remove('correct', 'wrong');
+    });
+
+    // 解説パネルを隠す
+    feedbackPanel.classList.remove('show', 'is-correct', 'is-wrong');
+}
+
+/**
+ * 選択肢クリック時の判定処理
+ */
+function handleAnswer(selectedChoice) {
+    if (state.answered) return;
+    state.answered = true;
+
+    const q = state.quizQuestions[state.currentIndex];
+    const isCorrect = (selectedChoice === q.answer);
+
+    if (isCorrect) {
+        state.score++;
+        state.combo++;
+        currentScoreEl.textContent = state.score;
+        if (state.combo >= 2) {
+            comboBadge.textContent = `🔥 ${state.combo}連続正解!`;
+            comboBadge.style.display = 'inline-block';
+        }
+    } else {
+        state.combo = 0;
+        comboBadge.style.display = 'none';
+    }
+
+    // 履歴に記録
+    state.history.push({
+        question: q,
+        userAnswer: selectedChoice,
+        isCorrect: isCorrect
+    });
+
+    // ボタンの見た目更新
+    choiceBtns.forEach(btn => {
+        btn.disabled = true;
+        const choice = btn.dataset.choice;
+        if (choice === q.answer) {
+            btn.classList.add('correct');
+        } else if (choice === selectedChoice && !isCorrect) {
+            btn.classList.add('wrong');
+        }
+    });
+
+    // フィードバックパネルの表示
+    feedbackPanel.classList.remove('is-correct', 'is-wrong');
+    if (isCorrect) {
+        feedbackPanel.classList.add('is-correct');
+        feedbackIcon.textContent = '⭕';
+        feedbackTitle.textContent = `正解！「${q.answer}」です！`;
+    } else {
+        feedbackPanel.classList.add('is-wrong');
+        feedbackIcon.textContent = '❌';
+        feedbackTitle.textContent = `残念… 正解は「${q.answer}」です`;
+    }
+
+    // 品詞・活用の種類・基本形のバッジ表示
+    grammarMeta.innerHTML = `
+        <span class="meta-pill">品詞：${escapeHtml(q.pos)}</span>
+        <span class="meta-pill">活用の種類：${escapeHtml(q.type)}</span>
+        <span class="meta-pill">基本形：${escapeHtml(q.base)}</span>
+    `;
+
+    explanationText.textContent = q.explanation;
+
+    // 最終問題ならボタン文言を変更
+    if (state.currentIndex === 9) {
+        nextBtnText.textContent = '結果発表を見る';
+    } else {
+        nextBtnText.textContent = '次の問題へ';
+    }
+
+    feedbackPanel.classList.add('show');
+}
+
+/**
+ * 次の問題へ進む、または結果画面へ遷移する
+ */
+function handleNext() {
+    if (state.currentIndex < 9) {
+        state.currentIndex++;
+        renderQuestion();
+    } else {
+        showResults();
+    }
+}
+
+/**
+ * 結果画面の生成と表示
+ */
+function showResults() {
+    finalScore.textContent = state.score;
+
+    // スコアに応じたランク判定
+    let rankInfo = {};
+    if (state.score === 10) {
+        rankInfo = {
+            title: '👑 文法王',
+            className: 'rank-king',
+            comment: '完璧です！用言の活用を完全にマスターしました。君こそ真の「文法王」だ！',
+            svg: `<svg width="52" height="52" viewBox="0 0 24 24" fill="#facc15" stroke="#a16207" stroke-width="2"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>`
+        };
+    } else if (state.score >= 8) {
+        rankInfo = {
+            title: '🏆 文法マスター',
+            className: 'rank-master',
+            comment: '素晴らしい成績！あと一歩で全問正解の「文法王」です。間違えた問題を復習して頂点を目指そう！',
+            svg: `<svg width="52" height="52" viewBox="0 0 24 24" fill="#60a5fa" stroke="#1e40af" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>`
+        };
+    } else if (state.score >= 6) {
+        rankInfo = {
+            title: '⚔️ 文法名人',
+            className: 'rank-expert',
+            comment: '合格ライン突破！活用の基本はしっかり身についています。「見分け方ヒント」も活用してさらに上を目指そう！',
+            svg: `<svg width="52" height="52" viewBox="0 0 24 24" fill="#34d399" stroke="#065f46" stroke-width="2"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>`
+        };
+    } else if (state.score >= 4) {
+        rankInfo = {
+            title: '📘 文法見習い',
+            className: 'rank-apprentice',
+            comment: 'ナイスファイト！【　】のすぐ後ろに続く言葉（「ない」「ます」「ば」など）に注目すると見分けやすくなるよ！',
+            svg: `<svg width="52" height="52" viewBox="0 0 24 24" fill="#94a3b8" stroke="#334155" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`
+        };
+    } else {
+        rankInfo = {
+            title: '🌱 文法チャレンジャー',
+            className: 'rank-apprentice',
+            comment: 'まずは一歩目！右上の「💡見分け方ヒント」を見ながら、後ろに続く言葉との組み合わせを覚えて再挑戦しよう！',
+            svg: `<svg width="52" height="52" viewBox="0 0 24 24" fill="#a7f3d0" stroke="#059669" stroke-width="2"><path d="M12 22v-9"/><path d="M12 13c-3.5 0-6-2.5-6-6 3.5 0 6 2.5 6 6z"/><path d="M12 13c3.5 0 6-2.5 6-6-3.5 0-6 2.5-6 6z"/></svg>`
+        };
+    }
+
+    rankCard.className = `rank-card ${rankInfo.className}`;
+    rankIconContainer.innerHTML = rankInfo.svg;
+    rankTitle.textContent = rankInfo.title;
+    rankComment.textContent = rankInfo.comment;
+
+    // 10問の振り返りリスト生成
+    reviewList.innerHTML = state.history.map((item, idx) => {
+        const q = item.question;
+        const statusClass = item.isCorrect ? 'rev-ok' : 'rev-ng';
+        const mark = item.isCorrect ? '⭕ 正解' : '❌ 不正解';
+        return `
+            <div class="review-item ${statusClass}">
+                <div class="rev-top">
+                    <span>第${idx + 1}問（${escapeHtml(q.type)}）</span>
+                    <span>${mark}</span>
+                </div>
+                <div class="rev-sentence">
+                    ${escapeHtml(q.before)}<strong>【${escapeHtml(q.target)}】</strong>${escapeHtml(q.after)}
+                </div>
+                <div class="rev-answers">
+                    あなたの回答：<strong>${escapeHtml(item.userAnswer)}</strong> ／ 正解：<strong>${escapeHtml(q.answer)}</strong>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    showScreen(resultScreen);
+}
+
+/**
+ * XSS対策用HTMLエスケープ
+ */
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+// イベントリスナー登録
+startBtn.addEventListener('click', startGame);
+retryBtn.addEventListener('click', startGame);
+nextBtn.addEventListener('click', handleNext);
+
+choiceBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        handleAnswer(btn.dataset.choice);
+    });
+});
+
+// ヒントモーダル開閉
+openHintBtn.addEventListener('click', () => {
+    hintModal.classList.add('open');
+});
+
+closeHintBtn.addEventListener('click', () => {
+    hintModal.classList.remove('open');
+});
+
+hintModal.addEventListener('click', (e) => {
+    if (e.target === hintModal) {
+        hintModal.classList.remove('open');
+    }
+});
+
+// キーボードショートカット対応（1〜6で選択、Enter/Spaceで次へ）
+document.addEventListener('keydown', (e) => {
+    if (hintModal.classList.contains('open')) {
+        if (e.key === 'Escape') hintModal.classList.remove('open');
+        return;
+    }
+    if (!quizScreen.classList.contains('active')) return;
+
+    const keyNum = parseInt(e.key, 10);
+    if (!state.answered && keyNum >= 1 && keyNum <= 6) {
+        const targetBtn = choiceBtns[keyNum - 1];
+        if (targetBtn) handleAnswer(targetBtn.dataset.choice);
+    } else if (state.answered && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault();
+        handleNext();
+    }
+});
+</script>
+</body>
+</html>
